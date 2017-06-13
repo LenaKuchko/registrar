@@ -56,6 +56,17 @@ namespace Registrar
       //Assert
       Assert.Equal(testId, expectedId);
     }
+    [Fact]
+    public void Test_Find_FindsCourseInDatabase()
+    {
+      //Arrange
+      Course testCourse = new Course("Intro Econ");
+      testCourse.Save();
+      //Act
+      Course foundCourse = Course.Find(testCourse.Id);
+      //Assert
+      Assert.Equal(testCourse, foundCourse);
+    }
     public void Dispose()
     {
       Course.DeleteAll();

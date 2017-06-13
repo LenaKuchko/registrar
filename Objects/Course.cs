@@ -88,6 +88,39 @@ namespace Registrar
       return courses;
     }
 
+    public static Course Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM courses WHERE id = @CourseId;", conn);
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(courseIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundCourseId = 0;
+      string foundCourseName = null;
+      while(rdr.Read())
+      {
+        foundCourseId = rdr.GetInt32(0);
+        foundCourseName = rdr.GetString(1);
+      }
+      Course foundCourse = new Course(foundCourseName, foundCourseId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundCourse;
+    }
+
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
