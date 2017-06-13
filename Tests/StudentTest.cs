@@ -22,6 +22,30 @@ namespace Registrar
       //Assert
       Assert.Equal(0, result);
     }
+
+    [Fact]
+    public void Test_Save_SavesStudentToDatabase()
+    {
+      //Arrange
+      Student testStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+      testStudent.Save();
+      //Act
+      List<Student> result = Student.GetAll();
+      List<Student> expectedResult = new List<Student>{testStudent};
+      //Assert
+      Assert.Equal(result, expectedResult);
+    }
+
+    [Fact]
+    public void Test_Equal_ReturnsTrueForSameInfo()
+    {
+      //Arrange, Act
+      Student firstStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+      Student secondStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+
+      //Assert
+      Assert.Equal(firstStudent, secondStudent);
+    }
     public void Dispose()
     {
       Student.DeleteAll();

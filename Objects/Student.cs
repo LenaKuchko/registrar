@@ -20,6 +20,24 @@ namespace Registrar
       Enrollment = enrollment;
     }
 
+    public override bool Equals(System.Object otherStudent)
+    {
+      if (!(otherStudent is Student))
+      {
+        return false;
+      }
+      else
+      {
+        Student newStudent = (Student) otherStudent;
+        bool idEquality = this.Id == newStudent.Id;
+        bool nameEquality = this.Name == newStudent.Name;
+        bool yearEquality = this.Year == newStudent.Year;
+        bool enrollmentEquality = this.Enrollment == newStudent.Enrollment;
+
+        return (idEquality && nameEquality && yearEquality && enrollmentEquality);
+      }
+    }
+
     public static List<Student> GetAll()
     {
       SqlConnection conn = DB.Connection();
@@ -50,6 +68,45 @@ namespace Registrar
       return students;
     }
 
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO students (name, year, enrollment) OUTPUT INSERTED.id VALUES (@StudentName, @StudentYear, @StudentEnrollment);", conn);
+
+      SqlParameter nameParameter = new SqlParameter();
+      nameParameter.ParameterName = "@StudentName";
+      nameParameter.Value = this.Name;
+
+      SqlParameter studentYearParameter = new SqlParameter();
+      studentYearParameter.ParameterName = "@StudentYear";
+      studentYearParameter.Value = this.Year;
+
+      SqlParameter studentEnrollmentParameter = new SqlParameter();
+      studentEnrollmentParameter.ParameterName = "@StudentEnrollment";
+      studentEnrollmentParameter.Value = this.Enrollment;
+
+      cmd.Parameters.Add(nameParameter);
+      cmd.Parameters.Add(studentYearParameter);
+      cmd.Parameters.Add(studentEnrollmentParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
@@ -58,8 +115,5 @@ namespace Registrar
       cmd.ExecuteNonQuery();
       conn.Close();
     }
-
-
-
   }
 }
