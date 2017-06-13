@@ -120,6 +120,39 @@ namespace Registrar
       }
     }
 
+    public static Department Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM departments WHERE id = @DepartmentId;", conn);
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(departmentIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundDepartmentId = 0;
+      string foundDepartmentName = null;
+      while(rdr.Read())
+      {
+        foundDepartmentId = rdr.GetInt32(0);
+        foundDepartmentName = rdr.GetString(1);
+      }
+      Department foundDepartment = new Department(foundDepartmentName, foundDepartmentId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundDepartment;
+    }
+
+
 
     public static void DeleteAll()
     {

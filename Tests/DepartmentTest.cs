@@ -60,6 +60,18 @@ namespace Registrar
       Assert.Equal(firstTestDepartment, secondTestDepartment);
     }
 
+    [Fact]
+    public void Test_Find_FindsDepartmentInDatabase()
+    {
+      //Arrange
+      Department testDepartment = new Department("History");
+      testDepartment.Save();
+      //Act
+      Department foundDepartment = Department.Find(testDepartment.Id);
+      //Assert
+      Assert.Equal(testDepartment, foundDepartment);
+    }
+
     public void Dispose()
     {
       Department.DeleteAll();
