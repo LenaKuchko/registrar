@@ -90,9 +90,26 @@ namespace Registrar
       Assert.Equal(resultList, expectedList);
     }
 
+    [Fact]
+    public void Test_AddCourse_AddCourseToDepartment()
+    {
+      //Arrange
+      Course newCourse = new Course("Intro Econ", 1);
+      newCourse.Save();
+      Department testDepartment = new Department("History");
+      testDepartment.Save();
+      //Act
+      testDepartment.AddCourse(newCourse);
+      List<Course> testDepartmentCourses = testDepartment.GetCourses();
+      List<Course> expectedList = new List<Course>{newCourse};
+      //Assert
+      Assert.Equal(expectedList, testDepartmentCourses);
+    }
+
     public void Dispose()
     {
       Department.DeleteAll();
+      Course.DeleteAll();
     }
   }
 }
