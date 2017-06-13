@@ -96,6 +96,24 @@ namespace Registrar
       //Assert
       Assert.Equal(resultList, expectedList);
     }
+    [Fact]
+    public void Test_GetCourses_ReturnsTrueIfListsAreTheSame()
+    {
+      //Arrange
+      Teacher newTeacher = new Teacher("Lina Shadrach");
+      newTeacher.Save();
+      Course firstTestCourse = new Course("Intro Econ", newTeacher.Id);
+      firstTestCourse.Save();
+      Course secondTestCourse = new Course("Intro Women's Studies", newTeacher.Id);
+      secondTestCourse.Save();
+      Course thirdTestCourse = new Course("Intro to Beyonce Studies", newTeacher.Id);
+      thirdTestCourse.Save();
+      List<Course> expectedList = Course.GetAll();
+      //Act
+      List<Course> resultList = newTeacher.GetCourses();
+      //Arrange
+      Assert.Equal(resultList, expectedList);
+    }
     public void Dispose()
     {
       Teacher.DeleteAll();
