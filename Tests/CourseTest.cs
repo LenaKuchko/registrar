@@ -67,6 +67,20 @@ namespace Registrar
       //Assert
       Assert.Equal(testCourse, foundCourse);
     }
+
+    [Fact]
+    public void Test_UpdateCourse_ReturnsTrueIfCourseInfoIsTheSame()
+    {
+      //Arrange
+      Course firstTestCourse = new Course("Intro Econ");
+      firstTestCourse.Save();
+      Course secondTestCourse = new Course("Intro Women's Studies", firstTestCourse.Id);
+      //Act
+      secondTestCourse.UpdateCourse("Intro Econ");
+      //Assert
+      Assert.Equal(firstTestCourse, secondTestCourse);
+    }
+
     public void Dispose()
     {
       Course.DeleteAll();
