@@ -26,8 +26,10 @@ namespace Registrar
     public void Test_Equal_ReturnsTrueForSameInfo()
     {
       //Arrange, Act
-      Course firstCourse = new Course("Intro Econ");
-      Course secondCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course firstCourse = new Course("Intro Econ", testTeacher.Id);
+      Course secondCourse = new Course("Intro Econ", testTeacher.Id);
       //Assert
       Assert.Equal(firstCourse, secondCourse);
     }
@@ -35,7 +37,9 @@ namespace Registrar
     public void Test_Save_SavesCourseToDatabase()
     {
       //Arrange
-      Course testCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course testCourse = new Course("Intro Econ", testTeacher.Id);
       testCourse.Save();
       //Act
       List<Course> result = Course.GetAll();
@@ -47,7 +51,9 @@ namespace Registrar
     public void Test_Save_AssignsIdToCourseInDatabase()
     {
       //Arrange
-      Course testCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course testCourse = new Course("Intro Econ", testTeacher.Id);
       testCourse.Save();
       //Act
       Course savedCourse = Course.GetAll()[0];
@@ -60,7 +66,9 @@ namespace Registrar
     public void Test_Find_FindsCourseInDatabase()
     {
       //Arrange
-      Course testCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course testCourse = new Course("Intro Econ", testTeacher.Id);
       testCourse.Save();
       //Act
       Course foundCourse = Course.Find(testCourse.Id);
@@ -71,11 +79,13 @@ namespace Registrar
     public void Test_UpdateCourse_ReturnsTrueIfCourseInfoIsTheSame()
     {
       //Arrange
-      Course firstTestCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course firstTestCourse = new Course("Intro Econ", testTeacher.Id);
       firstTestCourse.Save();
-      Course secondTestCourse = new Course("Intro Women's Studies", firstTestCourse.Id);
+      Course secondTestCourse = new Course("Intro Women's Studies", 4, firstTestCourse.Id);
       //Act
-      secondTestCourse.UpdateCourse("Intro Econ");
+      secondTestCourse.UpdateCourse("Intro Econ", testTeacher.Id);
       //Assert
       Assert.Equal(firstTestCourse, secondTestCourse);
     }
@@ -83,11 +93,13 @@ namespace Registrar
     public void Test_Delete_ReturnsTrueIfListsAreTheSame()
     {
       //Arrange
-      Course firstTestCourse = new Course("Intro Econ");
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      Course firstTestCourse = new Course("Intro Econ", testTeacher.Id);
       firstTestCourse.Save();
-      Course secondTestCourse = new Course("Intro Women's Studies");
+      Course secondTestCourse = new Course("Intro Women's Studies", testTeacher.Id);
       secondTestCourse.Save();
-      Course thirdTestCourse = new Course("Intro Beyonce Studies");
+      Course thirdTestCourse = new Course("Intro Beyonce Studies", testTeacher.Id);
       thirdTestCourse.Save();
       List<Course> expectedList = new List<Course>{firstTestCourse, secondTestCourse};
       //Act
@@ -99,6 +111,7 @@ namespace Registrar
     public void Dispose()
     {
       Course.DeleteAll();
+      Teacher.DeleteAll();
     }
   }
 }
