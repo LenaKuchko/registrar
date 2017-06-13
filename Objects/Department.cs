@@ -152,6 +152,25 @@ namespace Registrar
       return foundDepartment;
     }
 
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM departments WHERE id = @DepartmentId;", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.Id;
+
+      cmd.Parameters.Add(departmentIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
 
     public static void DeleteAll()

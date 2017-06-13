@@ -72,6 +72,24 @@ namespace Registrar
       Assert.Equal(testDepartment, foundDepartment);
     }
 
+    [Fact]
+    public void Test_Delete_ReturnsTrueIfListsAreTheSame()
+    {
+      //Arrange
+      Department firstTestDepartment = new Department("History");
+      firstTestDepartment.Save();
+      Department secondTestDepartment = new Department("Classics");
+      secondTestDepartment.Save();
+      Department thirdTestDepartment = new Department("Biology");
+      thirdTestDepartment.Save();
+      List<Department> expectedList = new List<Department>{firstTestDepartment, secondTestDepartment};
+      //Act
+      thirdTestDepartment.Delete();
+      List<Department> resultList = Department.GetAll();
+      //Assert
+      Assert.Equal(resultList, expectedList);
+    }
+
     public void Dispose()
     {
       Department.DeleteAll();
