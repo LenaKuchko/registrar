@@ -30,6 +30,35 @@ namespace Registrar
         return (idEquality && nameEquality);
       }
     }
+
+    public static List<Teacher> GetAll()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM teachers;", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Teacher> teachers = new List<Teacher>{};
+      while (rdr.Read())
+      {
+        int teacherId = rdr.GetInt32(0);
+        string teacherName = rdr.GetString(1);
+        Teacher newTeacher = new Teacher(teacherName, teacherId);
+        teachers.Add(newTeacher);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return teachers;
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();

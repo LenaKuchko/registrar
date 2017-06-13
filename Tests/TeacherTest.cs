@@ -14,6 +14,14 @@ namespace Registrar
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=registrar_test;Integrated Security=SSPI;";
     }
+    [Fact]
+    public void Test_TeacherDatabaseEmptyAtFirst()
+    {
+      //Arrange, Act
+      int result = Teacher.GetAll().Count;
+      //Assert
+      Assert.Equal(0, result);
+    }
     public void Dispose()
     {
       Teacher.DeleteAll();
