@@ -67,6 +67,18 @@ namespace Registrar
       //Assert
       Assert.Equal(testTeacher, foundTeacher);
     }
+    [Fact]
+    public void Test_UpdateTeacher_ReturnsTrueIfTeacherInfoIsTheSame()
+    {
+      //Arrange
+      Teacher firstTestTeacher = new Teacher("Lina Shadrach");
+      firstTestTeacher.Save();
+      Teacher secondTestTeacher = new Teacher("Ms. Frizz", firstTestTeacher.Id);
+      //Act
+      secondTestTeacher.UpdateTeacher("Lina Shadrach");
+      //Assert
+      Assert.Equal(firstTestTeacher, secondTestTeacher);
+    }
     public void Dispose()
     {
       Teacher.DeleteAll();

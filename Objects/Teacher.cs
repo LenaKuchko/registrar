@@ -88,6 +88,39 @@ namespace Registrar
       return teachers;
     }
 
+    public void UpdateTeacher(string newName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE teachers SET name = @NewName OUTPUT INSERTED.name WHERE id = @TeacherId;", conn);
+
+      SqlParameter newNameParameter = new SqlParameter();
+      newNameParameter.ParameterName = "@NewName";
+      newNameParameter.Value = newName;
+      cmd.Parameters.Add(newNameParameter);
+
+      SqlParameter teacherIdParameter = new SqlParameter();
+      teacherIdParameter.ParameterName = "@TeacherId";
+      teacherIdParameter.Value = this.Id;
+      cmd.Parameters.Add(teacherIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Name = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
     public static Teacher Find(int id)
     {
       SqlConnection conn = DB.Connection();
