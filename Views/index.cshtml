@@ -1,0 +1,30 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<div class="row">
+  <div class="col-md-3">
+    @foreach(var department in @Model["listDepartments"])
+    {
+      <h3>@department.Name</h3>
+    }
+  </div>
+  <div class="col-md-3">
+    @foreach(var course in @Model["listCourses"])
+    {
+      <h3>@course.Name</h3>
+    }
+  </div>
+  <div class="col-md-3">
+    @foreach(var teacher in @Model["listTeachers"])
+    {
+      <h3>@teacher.Name</h3>
+    }
+  </div>
+  <div class="col-md-3">
+    @foreach(var student in @Model["listStudents"])
+    {
+      <h3>@student.Name</h3>
+    }
+  </div>
+</div>
