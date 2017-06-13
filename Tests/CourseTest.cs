@@ -112,6 +112,7 @@ namespace Registrar
     {
       Course.DeleteAll();
       Teacher.DeleteAll();
+      Student.DeleteAll();
     }
   }
 }
