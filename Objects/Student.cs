@@ -242,6 +242,66 @@ namespace Registrar
       return courses;
     }
 
+    public void AddTeacher(Teacher teacher)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO students_teachers (student_id, teacher_id) VALUES (@StudentId, @TeacherId);", conn);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = this.Id;
+      cmd.Parameters.Add(studentIdParameter);
+
+      SqlParameter teacherIdParameter = new SqlParameter();
+      teacherIdParameter.ParameterName = "@TeacherId";
+      teacherIdParameter.Value = teacher.Id;
+      cmd.Parameters.Add(teacherIdParameter);
+
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Teacher> GetTeachers()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT teachers.* FROM students JOIN students_teachers ON (students.id = students_teachers.student_id) JOIN teachers ON (students_teachers.teacher_id = teachers.id)  WHERE students.id = @StudentId;", conn);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = this.Id;
+
+      cmd.Parameters.Add(studentIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Teacher> teachers = new List<Teacher>{};
+
+      while(rdr.Read())
+      {
+        int teacherId = rdr.GetInt32(0);
+        string teacherName = rdr.GetString(1);
+
+        Teacher newTeacher = new Teacher(teacherName, teacherId);
+        teachers.Add(newTeacher);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return teachers;
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
