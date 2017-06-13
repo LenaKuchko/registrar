@@ -73,6 +73,19 @@ namespace Registrar
     }
 
     [Fact]
+    public void Test_UpdateStudent_ReturnsTrueIfStudentInfoIsTheSame()
+    {
+      //Arrange
+      Student firstTestStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+      firstTestStudent.Save();
+      Student secondTestStudent = new Student("Nick", 2, new DateTime(2017, 6, 9), firstTestStudent.Id);
+      //Act
+      secondTestStudent.UpdateStudent(1, "Jared");
+      //Assert
+      Assert.Equal(firstTestStudent, secondTestStudent);
+    }
+
+    [Fact]
     public void Test_Delete_ReturnsTrueIfListsAreTheSame()
     {
       //Arrange

@@ -107,6 +107,44 @@ namespace Registrar
       return students;
     }
 
+    public void UpdateStudent(int newYear, string newName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE students SET year = @NewYear, name = @NewName OUTPUT INSERTED.year, INSERTED.name WHERE id = @StudentId;", conn);
+
+      SqlParameter newYearParameter = new SqlParameter();
+      newYearParameter.ParameterName = "@NewYear";
+      newYearParameter.Value = newYear;
+      cmd.Parameters.Add(newYearParameter);
+
+      SqlParameter newNameParameter = new SqlParameter();
+      newNameParameter.ParameterName = "@NewName";
+      newNameParameter.Value = newName;
+      cmd.Parameters.Add(newNameParameter);
+
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = this.Id;
+      cmd.Parameters.Add(studentIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Year = rdr.GetInt32(0);
+        this.Name = rdr.GetString(1);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public static Student Find(int id)
     {
       SqlConnection conn = DB.Connection();
