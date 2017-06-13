@@ -108,6 +108,22 @@ namespace Registrar
       //Assert
       Assert.Equal(resultList, expectedList);
     }
+
+    [Fact]
+    public void Test_AddStudent_AddStudentToCourse()
+    {
+      //Arrange
+      Student newStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+      newStudent.Save();
+      Course testCourse = new Course("History", 1);
+      testCourse.Save();
+      //Act
+      testCourse.AddStudent(newStudent);
+      List<Student> testCourseStudents = testCourse.GetStudents();
+      List<Student> expectedList = new List<Student>{newStudent};
+      //Assert
+      Assert.Equal(expectedList, testCourseStudents);
+    }
     public void Dispose()
     {
       Course.DeleteAll();
