@@ -247,6 +247,65 @@ namespace Registrar
      return students;
    }
 
+   public void AddDepartment(Department department)
+   {
+     SqlConnection conn = DB.Connection();
+     conn.Open();
+
+     SqlCommand cmd = new SqlCommand("INSERT INTO departments_teachers (department_id, teacher_id) VALUES (@DepartmentId, @TeacherId);", conn);
+
+     SqlParameter departmentIdParameter = new SqlParameter();
+     departmentIdParameter.ParameterName = "@DepartmentId";
+     departmentIdParameter.Value = department.Id;
+     cmd.Parameters.Add(departmentIdParameter);
+
+     SqlParameter teacherIdParameter = new SqlParameter();
+     teacherIdParameter.ParameterName = "@TeacherId";
+     teacherIdParameter.Value = this.Id;
+     cmd.Parameters.Add(teacherIdParameter);
+
+     cmd.ExecuteNonQuery();
+     if (conn != null)
+     {
+       conn.Close();
+     }
+   }
+
+   public List<Department> GetDepartments()
+   {
+     SqlConnection conn = DB.Connection();
+     conn.Open();
+
+     SqlCommand cmd = new SqlCommand("SELECT departments.* FROM teachers JOIN departments_teachers ON (teachers.id = departments_teachers.teacher_id) JOIN departments ON (departments_teachers.department_id = departments.id)  WHERE teachers.id = @TeacherId;", conn);
+
+     SqlParameter teacherIdParameter = new SqlParameter();
+     teacherIdParameter.ParameterName = "@TeacherId";
+     teacherIdParameter.Value = this.Id;
+
+     cmd.Parameters.Add(teacherIdParameter);
+     SqlDataReader rdr = cmd.ExecuteReader();
+
+     List<Department> departments = new List<Department>{};
+
+     while(rdr.Read())
+     {
+       int departmentId = rdr.GetInt32(0);
+       string departmentName = rdr.GetString(1);
+
+       Department newDepartment = new Department(departmentName, departmentId);
+       departments.Add(newDepartment);
+     }
+
+     if (rdr != null)
+     {
+       rdr.Close();
+     }
+     if (conn != null)
+     {
+       conn.Close();
+     }
+     return departments;
+   }
 
     public void Delete()
     {

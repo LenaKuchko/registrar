@@ -130,9 +130,26 @@ namespace Registrar
       //Assert
       Assert.Equal(expectedList, testTeacherStudents);
     }
+
+    [Fact]
+    public void Test_AddDepartment_AddDepartmentToTeacher()
+    {
+      //Arrange
+      Department newDepartment = new Department("History");
+      newDepartment.Save();
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      //Act
+      testTeacher.AddDepartment(newDepartment);
+      List<Department> testTeacherDepartments = testTeacher.GetDepartments();
+      List<Department> expectedList = new List<Department>{newDepartment};
+      //Assert
+      Assert.Equal(expectedList, testTeacherDepartments);
+    }
     public void Dispose()
     {
       Teacher.DeleteAll();
+      Department.DeleteAll();
     }
   }
 }
