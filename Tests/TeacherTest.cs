@@ -56,6 +56,17 @@ namespace Registrar
       //Assert
       Assert.Equal(testId, expectedId);
     }
+    [Fact]
+    public void Test_Find_FindsTeacherInDatabase()
+    {
+      //Arrange
+      Teacher testTeacher = new Teacher("Lina Shadrach");
+      testTeacher.Save();
+      //Act
+      Teacher foundTeacher = Teacher.Find(testTeacher.Id);
+      //Assert
+      Assert.Equal(testTeacher, foundTeacher);
+    }
     public void Dispose()
     {
       Teacher.DeleteAll();

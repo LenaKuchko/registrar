@@ -88,6 +88,39 @@ namespace Registrar
       return teachers;
     }
 
+    public static Teacher Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM teachers WHERE id = @TeacherId;", conn);
+      SqlParameter teacherIdParameter = new SqlParameter();
+      teacherIdParameter.ParameterName = "@TeacherId";
+      teacherIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(teacherIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundTeacherId = 0;
+      string foundTeacherName = null;
+      while(rdr.Read())
+      {
+        foundTeacherId = rdr.GetInt32(0);
+        foundTeacherName = rdr.GetString(1);
+      }
+      Teacher foundTeacher = new Teacher(foundTeacherName, foundTeacherId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundTeacher;
+    }
+
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
