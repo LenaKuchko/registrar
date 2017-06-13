@@ -1,0 +1,16 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+@if(Model["form-type"] == "new-department")
+{
+  <h1 class="text-center">Add a department</h1>
+  <form action="/departments/new" method="post">
+    <div class="form-group">
+      <label for="department-name">Enter the department's name</label>
+      <input type="text" name="department-name" class="form-control">
+    </div>
+    <input type="hidden" name="show-info-new" class="form-control" value="department-new">
+    <button type="submit" class="btn btn-info">Add department</button>
+  </form>
+}

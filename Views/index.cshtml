@@ -4,6 +4,14 @@
 
 <div class="row">
   <div class="col-md-3">
+    @if(@Model["show-info"] == "new-department-info")
+    {
+      <h3>You just added @Model["newDepartment"].Name department!</h3>
+
+    }
+    <form  action="/departments/new" method="get">
+      <button type="submit" name="button">Add department</button>
+    </form>
     @foreach(var department in @Model["listDepartments"])
     {
       <h3>@department.Name</h3>
