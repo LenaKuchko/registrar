@@ -231,6 +231,65 @@ namespace Registrar
       return students;
     }
 
+    public void AddDepartment(Department department)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO courses_departments (course_id, department_id) VALUES (@CourseId, @DepartmentId);", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = department.Id;
+      cmd.Parameters.Add(departmentIdParameter);
+
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = this.Id;
+      cmd.Parameters.Add(courseIdParameter);
+
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Department> GetDepartments()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT departments.* FROM courses JOIN courses_departments ON (courses.id = courses_departments.course_id) JOIN departments ON (courses_departments.department_id = departments.id)  WHERE courses.id = @CourseId;", conn);
+
+      SqlParameter courseIdParameter = new SqlParameter();
+      courseIdParameter.ParameterName = "@CourseId";
+      courseIdParameter.Value = this.Id;
+
+      cmd.Parameters.Add(courseIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Department> departments = new List<Department>{};
+
+      while(rdr.Read())
+      {
+        int departmentId = rdr.GetInt32(0);
+        string departmentName = rdr.GetString(1);
+
+        Department newDepartment = new Department(departmentName, departmentId);
+        departments.Add(newDepartment);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return departments;
+    }
 
     public void Delete()
     {

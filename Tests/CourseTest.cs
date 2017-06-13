@@ -124,6 +124,22 @@ namespace Registrar
       //Assert
       Assert.Equal(expectedList, testCourseStudents);
     }
+
+    [Fact]
+    public void Test_AddDepartment_AddDepartmentToCourse()
+    {
+      //Arrange
+      Department newDepartment = new Department("History");
+      newDepartment.Save();
+      Course testCourse = new Course("Intro Econ", 1);
+      testCourse.Save();
+      //Act
+      testCourse.AddDepartment(newDepartment);
+      List<Department> testCourseDepartments = testCourse.GetDepartments();
+      List<Department> expectedList = new List<Department>{newDepartment};
+      //Assert
+      Assert.Equal(expectedList, testCourseDepartments);
+    }
     public void Dispose()
     {
       Course.DeleteAll();
