@@ -185,6 +185,69 @@ namespace Registrar
      return courses;
    }
 
+   public void AddStudent(Student student)
+   {
+     SqlConnection conn = DB.Connection();
+     conn.Open();
+
+     SqlCommand cmd = new SqlCommand("INSERT INTO students_teachers (student_id, teacher_id) VALUES (@StudentId, @TeacherId);", conn);
+
+     SqlParameter teacherIdParameter = new SqlParameter();
+     teacherIdParameter.ParameterName = "@TeacherId";
+     teacherIdParameter.Value = this.Id;
+     cmd.Parameters.Add(teacherIdParameter);
+
+     SqlParameter studentIdParameter = new SqlParameter();
+     studentIdParameter.ParameterName = "@StudentId";
+     studentIdParameter.Value = student.Id;
+     cmd.Parameters.Add(studentIdParameter);
+
+     cmd.ExecuteNonQuery();
+     if (conn != null)
+     {
+       conn.Close();
+     }
+   }
+
+   public List<Student> GetStudents()
+   {
+     SqlConnection conn = DB.Connection();
+     conn.Open();
+
+     SqlCommand cmd = new SqlCommand("SELECT students.* FROM teachers JOIN students_teachers ON (teachers.id = students_teachers.teacher_id) JOIN students ON (students_teachers.student_id = students.id)  WHERE teachers.id = @TeacherId;", conn);
+
+     SqlParameter teacherIdParameter = new SqlParameter();
+     teacherIdParameter.ParameterName = "@TeacherId";
+     teacherIdParameter.Value = this.Id;
+
+     cmd.Parameters.Add(teacherIdParameter);
+     SqlDataReader rdr = cmd.ExecuteReader();
+
+     List<Student> students = new List<Student>{};
+
+     while(rdr.Read())
+     {
+       int studentId = rdr.GetInt32(0);
+       string studentName = rdr.GetString(1);
+       int studentYear = rdr.GetInt32(2);
+       DateTime studentEnrollment = Convert.ToDateTime(rdr.GetString(3));
+
+       Student newStudent = new Student(studentName, studentYear, studentEnrollment, studentId);
+       students.Add(newStudent);
+     }
+
+     if (rdr != null)
+     {
+       rdr.Close();
+     }
+     if (conn != null)
+     {
+       conn.Close();
+     }
+     return students;
+   }
+
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
