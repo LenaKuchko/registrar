@@ -120,7 +120,6 @@ namespace Registrar
       }
     }
 
-
     public static Teacher Find(int id)
     {
       SqlConnection conn = DB.Connection();
@@ -153,6 +152,25 @@ namespace Registrar
       return foundTeacher;
     }
 
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM teachers WHERE id = @TeacherId;", conn);
+
+      SqlParameter teacherIdParameter = new SqlParameter();
+      teacherIdParameter.ParameterName = "@TeacherId";
+      teacherIdParameter.Value = this.Id;
+
+      cmd.Parameters.Add(teacherIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public static void DeleteAll()
     {
