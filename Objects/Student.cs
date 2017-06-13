@@ -38,36 +38,6 @@ namespace Registrar
       }
     }
 
-    public static List<Student> GetAll()
-    {
-      SqlConnection conn = DB.Connection();
-      conn.Open();
-
-      SqlCommand cmd = new SqlCommand("SELECT * FROM students;", conn);
-      SqlDataReader rdr = cmd.ExecuteReader();
-
-      List<Student> students = new List<Student>{};
-      while (rdr.Read())
-      {
-        int studentId = rdr.GetInt32(0);
-        string studentName = rdr.GetString(1);
-        int studentYear = rdr.GetInt32(2);
-        DateTime studentEnrollment = Convert.ToDateTime(rdr.GetString(3));
-        Student newStudent = new Student(studentName, studentYear, studentEnrollment, studentId);
-        students.Add(newStudent);
-      }
-
-      if (rdr != null)
-      {
-        rdr.Close();
-      }
-      if (conn != null)
-      {
-        conn.Close();
-      }
-      return students;
-    }
-
     public void Save()
     {
       SqlConnection conn = DB.Connection();
@@ -106,7 +76,73 @@ namespace Registrar
         conn.Close();
       }
     }
-    
+
+    public static List<Student> GetAll()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM students;", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Student> students = new List<Student>{};
+      while (rdr.Read())
+      {
+        int studentId = rdr.GetInt32(0);
+        string studentName = rdr.GetString(1);
+        int studentYear = rdr.GetInt32(2);
+        DateTime studentEnrollment = Convert.ToDateTime(rdr.GetString(3));
+        Student newStudent = new Student(studentName, studentYear, studentEnrollment, studentId);
+        students.Add(newStudent);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return students;
+    }
+
+    public static Student Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE id = @StudentId;", conn);
+      SqlParameter studentIdParameter = new SqlParameter();
+      studentIdParameter.ParameterName = "@StudentId";
+      studentIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(studentIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundStudentId = 0;
+      string foundStudentName = null;
+      int foundStudentYear = 0;
+      DateTime foundStudentEnrollment = default(DateTime);
+      while(rdr.Read())
+      {
+        foundStudentId = rdr.GetInt32(0);
+        foundStudentName = rdr.GetString(1);
+        foundStudentYear = rdr.GetInt32(2);
+        foundStudentEnrollment = Convert.ToDateTime(rdr.GetString(3));
+      }
+      Student foundStudent = new Student(foundStudentName, foundStudentYear, foundStudentEnrollment, foundStudentId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundStudent;
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
