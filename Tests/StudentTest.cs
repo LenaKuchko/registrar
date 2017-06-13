@@ -71,7 +71,25 @@ namespace Registrar
       //Assert
       Assert.Equal(testStudent, foundStudent);
     }
-    
+
+    [Fact]
+    public void Test_Delete_ReturnsTrueIfListsAreTheSame()
+    {
+      //Arrange
+      Student firstTestStudent = new Student("Jared", 1, new DateTime(2017, 6, 9));
+      firstTestStudent.Save();
+      Student secondTestStudent = new Student("Nick", 2, new DateTime(2017, 6, 9));
+      secondTestStudent.Save();
+      Student thirdTestStudent = new Student("joshua", 3, new DateTime(2017, 6, 9));
+      thirdTestStudent.Save();
+      List<Student> expectedList = new List<Student>{firstTestStudent, secondTestStudent};
+      //Act
+      thirdTestStudent.Delete();
+      List<Student> resultList = Student.GetAll();
+      //Assert
+      Assert.Equal(resultList, expectedList);
+    }
+
     public void Dispose()
     {
       Student.DeleteAll();
