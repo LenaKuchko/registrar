@@ -31,6 +31,35 @@ namespace Registrar
       }
     }
 
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO teachers (name) OUTPUT INSERTED.id VALUES (@TeacherName);", conn);
+
+      SqlParameter nameParameter = new SqlParameter();
+      nameParameter.ParameterName = "@TeacherName";
+      nameParameter.Value = this.Name;
+
+      cmd.Parameters.Add(nameParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public static List<Teacher> GetAll()
     {
       SqlConnection conn = DB.Connection();
