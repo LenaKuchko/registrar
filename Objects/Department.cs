@@ -213,6 +213,66 @@ namespace Registrar
       return courses;
     }
 
+    public void AddTeacher(Teacher teacher)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO departments_teachers (department_id, teacher_id) VALUES (@DepartmentId, @TeacherId);", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.Id;
+      cmd.Parameters.Add(departmentIdParameter);
+
+      SqlParameter teacherIdParameter = new SqlParameter();
+      teacherIdParameter.ParameterName = "@TeacherId";
+      teacherIdParameter.Value = teacher.Id;
+      cmd.Parameters.Add(teacherIdParameter);
+
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Teacher> GetTeachers()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT teachers.* FROM departments JOIN departments_teachers ON (departments.id = departments_teachers.department_id) JOIN teachers ON (departments_teachers.teacher_id = teachers.id)  WHERE departments.id = @DepartmentId;", conn);
+
+      SqlParameter departmentIdParameter = new SqlParameter();
+      departmentIdParameter.ParameterName = "@DepartmentId";
+      departmentIdParameter.Value = this.Id;
+
+      cmd.Parameters.Add(departmentIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Teacher> teachers = new List<Teacher>{};
+
+      while(rdr.Read())
+      {
+        int teacherId = rdr.GetInt32(0);
+        string teacherName = rdr.GetString(1);
+
+        Teacher newTeacher = new Teacher(teacherName, teacherId);
+        teachers.Add(newTeacher);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return teachers;
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
