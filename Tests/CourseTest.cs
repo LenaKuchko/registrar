@@ -67,7 +67,6 @@ namespace Registrar
       //Assert
       Assert.Equal(testCourse, foundCourse);
     }
-
     [Fact]
     public void Test_UpdateCourse_ReturnsTrueIfCourseInfoIsTheSame()
     {
@@ -80,7 +79,23 @@ namespace Registrar
       //Assert
       Assert.Equal(firstTestCourse, secondTestCourse);
     }
-
+    [Fact]
+    public void Test_Delete_ReturnsTrueIfListsAreTheSame()
+    {
+      //Arrange
+      Course firstTestCourse = new Course("Intro Econ");
+      firstTestCourse.Save();
+      Course secondTestCourse = new Course("Intro Women's Studies");
+      secondTestCourse.Save();
+      Course thirdTestCourse = new Course("Intro Beyonce Studies");
+      thirdTestCourse.Save();
+      List<Course> expectedList = new List<Course>{firstTestCourse, secondTestCourse};
+      //Act
+      thirdTestCourse.Delete();
+      List<Course> resultList = Course.GetAll();
+      //Assert
+      Assert.Equal(resultList, expectedList);
+    }
     public void Dispose()
     {
       Course.DeleteAll();

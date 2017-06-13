@@ -93,7 +93,7 @@ namespace Registrar
       firstTestStudent.Save();
       Student secondTestStudent = new Student("Nick", 2, new DateTime(2017, 6, 9));
       secondTestStudent.Save();
-      Student thirdTestStudent = new Student("joshua", 3, new DateTime(2017, 6, 9));
+      Student thirdTestStudent = new Student("Joshua", 3, new DateTime(2017, 6, 9));
       thirdTestStudent.Save();
       List<Student> expectedList = new List<Student>{firstTestStudent, secondTestStudent};
       //Act
